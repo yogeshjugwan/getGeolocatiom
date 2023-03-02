@@ -1,0 +1,40 @@
+npm install @react-native-community/geolocation --save
+
+import Geolocation from '@react-native-community/geolocation';
+
+const [currentLocation, setCurrentLocation] = useState(null);
+
+useEffect(() => {
+  Geolocation.getCurrentPosition(
+    position => {
+      const {latitude, longitude} = position.coords;
+      setCurrentLocation({latitude, longitude});
+    },
+    error => {
+      console.log(error);
+    },
+    {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+  );
+}, []);
+
+<Text>Latitude: {currentLocation?.latitude}</Text>
+<Text>Longitude: {currentLocation?.longitude}</Text>
+
+const [currentLocation, setCurrentLocation] = useState(null);
+
+useEffect(() => {
+  const watchId = Geolocation.watchPosition(
+    position => {
+      const {latitude, longitude} = position.coords;
+      setCurrentLocation({latitude, longitude});
+    },
+    error => {
+      console.log(error);
+    },
+    {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+  );
+
+  return () => {
+    Geolocation.clearWatch(watchId);
+  };
+}, []);
